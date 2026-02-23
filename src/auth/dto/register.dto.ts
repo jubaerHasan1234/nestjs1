@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger'; // Swagger ইমপোর্ট
 import {
   IsEmail,
   IsEnum,
@@ -12,16 +13,36 @@ export enum UserRole {
 }
 
 export class RegisterDto {
+  @ApiProperty({
+    example: 'Jubaer Hossain',
+    description: 'ইউজারের পূর্ণ নাম',
+  })
   @IsNotEmpty()
   name!: string;
 
+  @ApiProperty({
+    example: 'jubaer@example.com',
+    description: 'ইউজারের বৈধ ইমেইল এড্রেস',
+  })
   @IsEmail()
   email!: string;
 
+  @ApiProperty({
+    example: 'password123',
+    description: 'পাসওয়ার্ড (ন্যূনতম ৬ ক্যারেক্টার)',
+    minLength: 6,
+  })
   @MinLength(6)
   password!: string;
 
-  @IsOptional() // ✅ optional
-  @IsEnum(UserRole) // ✅ only USER or ADMIN allowed
+  @ApiProperty({
+    enum: UserRole,
+    example: UserRole.USER,
+    description: 'ইউজার রোল (USER অথবা ADMIN)',
+    required: false,
+    default: UserRole.USER,
+  })
+  @IsOptional()
+  @IsEnum(UserRole)
   role?: UserRole;
 }
